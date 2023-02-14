@@ -37,6 +37,14 @@ dependencies:
   device_preview: ^1.1.0
   dot_navigation_bar: ^1.0.1+4
   just_audio: ^0.9.29
+  fade_out_particle: ^1.2.1
+  checkmark: ^0.0.2+1
+  firebase_core: ^2.1.1
+  cron: ^0.5.1
+  shared_preferences: ^2.0.15
+  cloud_firestore: ^4.2.0
+  firebase_database: ^10.0.7
+
 
 dev_dependencies:
   flutter_test:

@@ -16,7 +16,6 @@ class TaskListHolder extends StatefulWidget {
 class _TaskListHolderState extends State<TaskListHolder> {
   late AudioPlayer player;
   // late DataSnapshot snapshot;
-  late List<MyTask> taskList;
 
   @override
   void initState() {
@@ -31,8 +30,6 @@ class _TaskListHolderState extends State<TaskListHolder> {
     super.dispose();
   }
 
-  final GlobalKey<AnimatedListState> key = GlobalKey();
-
   Future<List<MyTask>> getCurrentTaskList() async {
     List<MyTask> tempTaskList = <MyTask>[];
     print("Query all rows:");
@@ -46,66 +43,6 @@ class _TaskListHolderState extends State<TaskListHolder> {
       tempTaskList.add(currTask);
     }
     return tempTaskList;
-  }
-
-  // Future<DataSnapshot> getTaskList() async {
-  //   //TODO: Get task list from firebase
-  //   final ref = FirebaseDatabase.instance.ref().child('taskList');
-  //   final snapshot = ref.get();
-  //   return snapshot;
-  // }
-
-  // List<Widget> getTaskWidgets() {
-  //   Future<List<String>> myTaskList = Future.value(getTaskList());
-  //   List<Widget> essentialTaskList = [];
-  //   // for (int i = 0; i < myTaskList.length; i++) {
-  //   //   Task currTask = new Task(myTaskList[i].toString(), "", "", i, false);
-  //   //   // EssentialTask currEssentialTask = currTask.taskTitle;
-  //   //   essentialTaskList
-  //   //       .add(EssentialTask(player: player, taskTitle: currTask.taskTitle));
-  //   // }
-  //   return essentialTaskList;
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Expanded(
-  //     color: blue,
-  //     child: FirebaseAnimatedList(
-  //       query: FirebaseDatabase.instance.ref('taskList'),
-  //       itemBuilder: (context, snapshot, animation, index) {
-  //         return EssentialTask(
-  //           player: player,
-  //           taskTitle: (snapshot.child("taskName").value.toString()),
-  //         );
-  //       },
-  //       shrinkWrap: true,
-  //     ),
-  //   );
-  // }
-  List tasks = [];
-
-  List<Widget> getTaskWidgets() {
-    List<Widget> currTaskWidgets = [];
-    for (final currTask in taskList) {
-      bool taskCompleted = currTask.isComplete == 1 ? true : false;
-      currTaskWidgets.add(MyTaskUI(
-          taskTitle: currTask.taskName,
-          player: player,
-          checked: taskCompleted));
-    }
-    return currTaskWidgets;
-
-    // for (int i = 0; i < defaultTasks.length; i++) {
-    //   Task currTask = new Task(defaultTasks[i], "", "", i, false);
-    //   // EssentialTask currEssentialTask = currTask.taskTitle;
-    //   essentialTaskList.add(MyTaskUI(
-    //     player: player,
-    //     taskTitle: currTask.taskTitle,
-    //     checked: false,
-    //   ));
-    // }
-    // return essentialTaskList;
   }
 
   Future<List<MyTask>> convertCurrTasksIntoWidgets() async {
@@ -156,72 +93,3 @@ class _TaskListHolderState extends State<TaskListHolder> {
     );
   }
 }
-
-
-
-
-
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //     // crossAxisAlignment: CrossAxisAlignment.stretch,
-  //     children: getTaskWidgets(),
-  //   );
-  // }
-
-// @override
-// Widget build(BuildContext context) {
-//   List<String> myTaskList = getTaskList();
-//   List<Widget> essentialTaskList = [];
-//   for (int i = 0; i < myTaskList.length; i++) {
-//     Task currTask = new Task(myTaskList[i].toString(), "", "", i, false);
-//     // EssentialTask currEssentialTask = currTask.taskTitle;
-//     essentialTaskList
-//         .add(EssentialTask(player: player, taskTitle: currTask.taskTitle));
-//   }
-//   return Expanded(
-//     child: AnimatedList(
-//       key: key,
-//       initialItemCount: 0,
-//       itemBuilder: ((context, index, animation) {
-//         return SizeTransition(
-//             sizeFactor: animation,
-//             child:
-//                 EssentialTask(player: player, taskTitle: myTaskList[index]));
-//       }),
-//     ),
-//   );
-// }
-
-// @override
-// Widget build(BuildContext context) {
-//   var taskListSnapshot = getTaskList();
-//   List<Widget> essentialTaskList = [];
-//   // taskListSnapshot.whenComplete(() => print())
-//   print(taskListSnapshot);
-//   return FutureBuilder(
-//       future: taskListSnapshot,
-//       builder: (context, snapshot) {
-//         if (snapshot.hasError) {
-//           return Text(snapshot.error.toString());
-//         } else {
-//           return Text(snapshot.data.toString());
-//         }
-//       });
-
-//   return Text("temporary");
-// for (int i = 0; i < ; i++) {}
-// return Expanded(
-//   child: AnimatedList(
-//     key: key,
-//     initialItemCount: 0,
-//     itemBuilder: ((context, index, animation) {
-//       return SizeTransition(
-//           sizeFactor: animation,
-//           child: EssentialTask(player: player, taskTitle: tasks[index]));
-//     }),
-//   ),
-// );
-//   }

@@ -17,35 +17,25 @@ class _DopamineBoxHomeScreenState extends State<DopamineBoxHomeScreen> {
     var fullHeight = deviceData.size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
-    // return SafeArea(
-    //   child: Scaffold(
-    //     body: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       crossAxisAlignment: CrossAxisAlignment.stretch,
-    //       children: [
-    //         Expanded(
-    //           child: Container(
-    //             padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-    //             // padding: const EdgeInsets.fromLTRB(10, 5, 1, 5),
-    //             color: darkThemeBackgroundColor,
-    //             height: fullHeight,
-    //             child: TaskListHolder(),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     //TODO: Fix this navigation bar -- just make a custom one
-    //     // bottomNavigationBar: bottomBarWidget(),
-    //   ),
-    // );
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-          color: darkThemeBackgroundColor,
-          height: fullHeight,
-          child: TaskListHolder(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                // padding: const EdgeInsets.fromLTRB(10, 5, 1, 5),
+                color: darkThemeBackgroundColor,
+                height: fullHeight,
+                child: TaskListHolder(),
+              ),
+            ),
+          ],
         ),
+        //TODO: Fix this navigation bar -- just make a custom one
+        // bottomNavigationBar: bottomBarWidget(),
       ),
     );
   }

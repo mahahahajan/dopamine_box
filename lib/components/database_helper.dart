@@ -40,8 +40,11 @@ class DatabaseHelper {
   Future<void> initDB(Database currDB) async {
     // var currDB = await this._db;
     for (int i = 0; i < defaultTasks.length; i++) {
-      MyTask currTask =
-          MyTask(taskName: defaultTasks[i], isComplete: 0, streakCounter: 0);
+      MyTask currTask = MyTask(
+          taskName: defaultTasks[i],
+          isComplete: 0,
+          streakCounter: 0,
+          taskId: i);
       await currDB.insert(taskTable, currTask.toMap());
     }
   }
@@ -61,6 +64,18 @@ class DatabaseHelper {
     return query;
   }
 
+  Future<List<Map<String, dynamic>>?> querySpecificRow(int id) async {
+    var query = await _db.query(
+      taskTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (query.length > 0) {
+      return query;
+    }
+    return null;
+  }
+
   // // All of the methods (insert, query, update, delete) can also be done using
   // // raw SQL commands. This method uses a raw query to give the row count.
   // Future<int> queryRowCount() async {
@@ -70,15 +85,25 @@ class DatabaseHelper {
 
   // // We are assuming here that the id column in the map is set. The other
   // // column values will be used to update the row.
-  // Future<int> update(Map<String, dynamic> row) async {
-  //   int id = row[columnId];
-  //   return await _db.update(
-  //     table,
-  //     row,
-  //     where: '$columnId = ?',
-  //     whereArgs: [id],
-  //   );
-  // }
+  Future<int> updateOld(Map<String, dynamic> row) async {
+    int id = row[colId];
+    return await _db.update(
+      taskTable,
+      row,
+      where: '$colId = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> update(int id, int value) async {
+    // var row = await querySpecificRow(id);
+    return await _db.update(
+      taskTable,
+      {'isComplete': value},
+      where: '$colId = ?',
+      whereArgs: [id],
+    );
+  }
 
   // // Deletes the row specified by the id. The number of affected rows is
   // // returned. This should be 1 as long as the row exists.

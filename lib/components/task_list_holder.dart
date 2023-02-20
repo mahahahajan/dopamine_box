@@ -30,20 +30,21 @@ class _TaskListHolderState extends State<TaskListHolder> {
     super.dispose();
   }
 
-  Future<List<MyTask>> getCurrentTaskList() async {
-    List<MyTask> tempTaskList = <MyTask>[];
-    print("Query all rows:");
-    var currDatabase = await dbHelper.queryAllRows();
-    for (final row in currDatabase) {
-      print(row.toString());
-      MyTask currTask = MyTask(
-          taskName: row['taskName'],
-          isComplete: row['isComplete'],
-          streakCounter: row['streakCounter']);
-      tempTaskList.add(currTask);
-    }
-    return tempTaskList;
-  }
+  // Future<List<MyTask>> getCurrentTaskList() async {
+  //   List<MyTask> tempTaskList = <MyTask>[];
+  //   print("Query all rows:");
+  //   var currDatabase = await dbHelper.queryAllRows();
+  //   for (final row in currDatabase) {
+  //     print(row.toString());
+  //     MyTask currTask = MyTask(
+  //         taskName: row['taskName'],
+  //         isComplete: row['isComplete'],
+  //         streakCounter: row['streakCounter'],
+  //         row: row);
+  //     tempTaskList.add(currTask);
+  //   }
+  //   return tempTaskList;
+  // }
 
   Future<List<MyTask>> convertCurrTasksIntoWidgets() async {
     var currDatabase = await dbHelper.queryAllRows();
@@ -53,7 +54,8 @@ class _TaskListHolderState extends State<TaskListHolder> {
       MyTask currTask = MyTask(
           taskName: row['taskName'],
           isComplete: row['isComplete'],
-          streakCounter: row['streakCounter']);
+          streakCounter: row['streakCounter'],
+          taskId: row['id']);
       myTasks.add(currTask);
     }
     return myTasks;
@@ -81,9 +83,9 @@ class _TaskListHolderState extends State<TaskListHolder> {
                   height: (fullHeight - 50) / myTasks.length,
                   // height: (MediaQuery.of(context).size.height) / myTasks.length,
                   child: MyTaskUI(
-                      taskTitle: myTasks[index].taskName,
-                      player: player,
-                      checked: taskCompleted),
+                    task: myTasks[index],
+                    player: player,
+                  ),
                 );
               });
         } else {

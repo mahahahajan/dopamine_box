@@ -4,7 +4,7 @@ import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class DopamineBoxHomeScreen extends StatefulWidget {
-  DopamineBoxHomeScreen({Key? key}) : super(key: key);
+  const DopamineBoxHomeScreen({Key? key}) : super(key: key);
 
   @override
   State<DopamineBoxHomeScreen> createState() => _DopamineBoxHomeScreenState();
@@ -29,7 +29,7 @@ class _DopamineBoxHomeScreenState extends State<DopamineBoxHomeScreen> {
                 // padding: const EdgeInsets.fromLTRB(10, 5, 1, 5),
                 color: darkThemeBackgroundColor,
                 height: fullHeight,
-                child: TaskListHolder(),
+                child: const TaskListHolder(),
               ),
             ),
           ],
@@ -68,19 +68,19 @@ class bottomBarWidget extends StatelessWidget {
       items: [
         /// Home
         DotNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: const Icon(Icons.home),
           // selectedColor: Colors.purple,
         ),
 
         /// Likes
         DotNavigationBarItem(
-          icon: Icon(Icons.favorite_border),
+          icon: const Icon(Icons.favorite_border),
           // selectedColor: Colors.pink,
         ),
 
         /// Search
         DotNavigationBarItem(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           // selectedColor: Colors.orange,
         ),
       ],

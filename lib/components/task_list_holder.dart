@@ -1,5 +1,4 @@
 import 'package:dopamine_box/components/my_task_ui.dart';
-import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/main.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -7,7 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'my_task.dart';
 
 class TaskListHolder extends StatefulWidget {
-  TaskListHolder({Key? key}) : super(key: key);
+  const TaskListHolder({Key? key}) : super(key: key);
 
   @override
   State<TaskListHolder> createState() => _TaskListHolderState();
@@ -16,11 +15,13 @@ class TaskListHolder extends StatefulWidget {
 class _TaskListHolderState extends State<TaskListHolder> {
   late AudioPlayer player;
   // late DataSnapshot snapshot;
+  late bool areAllTasksDone;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    areAllTasksDone = false;
     player = AudioPlayer();
   }
 
@@ -30,21 +31,9 @@ class _TaskListHolderState extends State<TaskListHolder> {
     super.dispose();
   }
 
-  // Future<List<MyTask>> getCurrentTaskList() async {
-  //   List<MyTask> tempTaskList = <MyTask>[];
-  //   print("Query all rows:");
-  //   var currDatabase = await dbHelper.queryAllRows();
-  //   for (final row in currDatabase) {
-  //     print(row.toString());
-  //     MyTask currTask = MyTask(
-  //         taskName: row['taskName'],
-  //         isComplete: row['isComplete'],
-  //         streakCounter: row['streakCounter'],
-  //         row: row);
-  //     tempTaskList.add(currTask);
-  //   }
-  //   return tempTaskList;
-  // }
+  void playFinalMusic() {
+    print("This will play final music");
+  }
 
   Future<List<MyTask>> convertCurrTasksIntoWidgets() async {
     var currDatabase = await dbHelper.queryAllRows();
@@ -67,6 +56,9 @@ class _TaskListHolderState extends State<TaskListHolder> {
     var fullHeight = deviceData.size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
+    if (areAllTasksDone) {
+      return Text("Done for today");
+    }
     return FutureBuilder(
       future: convertCurrTasksIntoWidgets(),
       builder: (context, snapshot) {
@@ -89,7 +81,7 @@ class _TaskListHolderState extends State<TaskListHolder> {
                 );
               });
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

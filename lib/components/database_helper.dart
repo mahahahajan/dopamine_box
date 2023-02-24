@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:sqflite/sqflite.dart';
 import '../constants.dart';
 import 'my_task.dart';
@@ -70,7 +69,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    if (query.length > 0) {
+    if (query.isNotEmpty) {
       return query;
     }
     return null;
@@ -103,6 +102,10 @@ class DatabaseHelper {
       where: '$colId = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<void> resetTasks() async {
+    await _db.rawUpdate('UPDATE task_table SET isComplete = 0');
   }
 
   // // Deletes the row specified by the id. The number of affected rows is

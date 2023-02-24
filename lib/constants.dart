@@ -1,6 +1,6 @@
 //DEV: Color Palette / All colors in app
-import 'dart:ffi';
 
+import 'package:dopamine_box/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +39,10 @@ const List<String> defaultTasks = <String>[
   "Do something for your home (clean, repair, expand)",
   "Do something for your future (meal prep, sleep early)",
 ];
+
+Future<void> resetAllTasks() async {
+  await dbHelper.resetTasks();
+}
 
 Future<bool> checkForDailyReset() async {
   final prefs = await SharedPreferences.getInstance();

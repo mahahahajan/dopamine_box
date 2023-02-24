@@ -1,4 +1,5 @@
-import 'package:checkmark/checkmark.dart';
+import 'package:cron/cron.dart';
+import 'package:dopamine_box/components/task_list_holder.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/main.dart';
 import 'package:fade_out_particle/fade_out_particle.dart';
@@ -27,23 +28,34 @@ class _MyTaskUIState extends State<MyTaskUI> {
   Color iconColor = white;
   Color containerBackgroundColor = essentialTaskBackgroundColor;
   double? checkBoxSize = 18;
-  late bool shouldShowDissapearAnimation;
+  late bool taskWasCompleteAlready;
 
   @override
   void initState() {
     super.initState();
+    getOrRefreshData();
+    cron.schedule(Schedule.parse('*/1 * * * *'), () {
+      dbHelper.resetTasks();
+      print("Test  cron");
+      setState(() {
+        getOrRefreshData();
+      });
+    });
+  }
+
+  void getOrRefreshData() {
     taskTitle = widget.task.taskName;
     player = widget.player;
     checked = widget.task.isComplete == 0 ? false : true;
     taskId = widget.task.taskId;
-    shouldShowDissapearAnimation = checked ? false : true;
-    //if this task is already checked, set this to false
+    taskWasCompleteAlready = checked ? true : false;
     checkboxIcon = checked ? Icons.done : Icons.circle_outlined;
+    containerBackgroundColor = essentialTaskBackgroundColor;
   }
 
-  void playSound() async {
+  void playSound(String sound) async {
     try {
-      await player.setAsset(doneSoundPath);
+      await player.setAsset(sound);
     } on Exception catch (_, e) {
       print(e);
       return;
@@ -51,30 +63,26 @@ class _MyTaskUIState extends State<MyTaskUI> {
     player.play();
   }
 
-  //TODO: save color
   void toggleEssentialTask(int id) {
     if (!checked) {
-      //TODO: Set to true
       setState(() {
-        this.shouldShowDissapearAnimation = true;
-        this.checked = true;
-        this.checkboxIcon = Icons.done;
-        this.containerBackgroundColor = otherGreen;
-        this.checkBoxSize = 34;
-        playSound();
+        checked = true;
+        checkboxIcon = Icons.done;
+        containerBackgroundColor = otherGreen;
+        checkBoxSize = 34;
+        playSound(doneSoundPath);
         dbHelper.update(id, 1);
         // this.iconColor = green;
+        //TODO: Check for completion and play a sound
       });
 
       // containerBackgroundColor =
     } else {
-      //TODO: Set to false;
       setState(() {
-        this.shouldShowDissapearAnimation = false;
-        this.checked = false;
-        this.checkboxIcon = Icons.circle_outlined;
-        this.containerBackgroundColor = essentialTaskBackgroundColor;
-        this.checkBoxSize = 18;
+        checked = false;
+        checkboxIcon = Icons.circle_outlined;
+        containerBackgroundColor = essentialTaskBackgroundColor;
+        checkBoxSize = 18;
         dbHelper.update(id, 0);
         // this.iconColor = white;
       });
@@ -122,18 +130,23 @@ class _MyTaskUIState extends State<MyTaskUI> {
             ),
             Expanded(
               child: Padding(
-                  padding: const EdgeInsets.only(right: 25.0),
-                  child: FadeOutParticle(
-                      disappear: shouldShowDissapearAnimation,
-                      duration: const Duration(milliseconds: 8000),
-                      curve: Curves.easeOutBack,
-                      child: Text(
-                        taskTitle,
-                        style: const TextStyle(
-                          color: white,
-                          fontSize: 18,
+                padding: const EdgeInsets.only(right: 25.0),
+                child: (taskWasCompleteAlready & checked)
+                    ? const Text("")
+                    : FadeOutParticle(
+                        key: UniqueKey(),
+                        disappear: checked,
+                        duration: const Duration(milliseconds: 8000),
+                        curve: Curves.easeOutBack,
+                        child: Text(
+                          taskTitle,
+                          style: const TextStyle(
+                            color: white,
+                            fontSize: 18,
+                          ),
                         ),
-                      ))),
+                      ),
+              ),
             ),
           ],
         ),

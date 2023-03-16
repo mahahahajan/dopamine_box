@@ -108,6 +108,16 @@ class DatabaseHelper {
     await _db.rawUpdate('UPDATE task_table SET isComplete = 0');
   }
 
+  Future<bool> areAllTasksComplete() async {
+    final result = await _db
+        .rawQuery("SELECT COUNT(*) FROM task_table WHERE isComplete = 0");
+    if (Sqflite.firstIntValue(result) == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // // Deletes the row specified by the id. The number of affected rows is
   // // returned. This should be 1 as long as the row exists.
   // Future<int> delete(int id) async {

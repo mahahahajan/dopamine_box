@@ -21,6 +21,7 @@ const Color blue = Color(0xFF247BA0);
 const Color purple = Color(0xFFBC69AA);
 
 const String doneSoundPath = 'assets/sounds/done.mp3';
+const String levelComplete = 'assets/sounds/levelComplete.mp3';
 
 const List<String> placeholderTasks = <String>[
   // "Brush in the morning (and take your vitamins)",

@@ -1,4 +1,3 @@
-
 import 'package:cron/cron.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/screens/home_screen.dart';
@@ -13,6 +12,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dbHelper.init();
   runApp(const DopamineBoxApp());
+}
+
+void runCronJobInBackground() {
+  cron.schedule(Schedule.parse('*/1 * * * *'), () {
+    dbHelper.resetTasks();
+  });
 }
 
 class DopamineBoxApp extends StatelessWidget {

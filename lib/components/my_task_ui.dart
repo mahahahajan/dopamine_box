@@ -33,24 +33,42 @@ class _MyTaskUIState extends State<MyTaskUI> {
   @override
   void initState() {
     super.initState();
-    getOrRefreshData();
+    initializeData();
     cron.schedule(Schedule.parse('*/1 * * * *'), () {
       dbHelper.resetTasks();
       print("Test  cron");
       setState(() {
-        getOrRefreshData();
+        resetData();
       });
     });
   }
 
-  void getOrRefreshData() {
+  void initializeData() {
     taskTitle = widget.task.taskName;
     player = widget.player;
     checked = widget.task.isComplete == 0 ? false : true;
     taskId = widget.task.taskId;
     taskWasCompleteAlready = checked ? true : false;
     checkboxIcon = checked ? Icons.done : Icons.circle_outlined;
+  }
+
+  void resetData() {
+    taskTitle = widget.task.taskName;
+    player = widget.player;
+    checked = false;
+    taskId = widget.task.taskId;
+    dbHelper.update(taskId, 0);
+    taskWasCompleteAlready = false;
+    checkboxIcon = Icons.circle_outlined;
     containerBackgroundColor = essentialTaskBackgroundColor;
+  }
+
+  void checkForComplete() async {
+    bool allTasksComplete = await dbHelper.areAllTasksComplete();
+    if (allTasksComplete) {
+      print("Check for this");
+      playSound(levelComplete);
+    }
   }
 
   void playSound(String sound) async {
@@ -74,6 +92,7 @@ class _MyTaskUIState extends State<MyTaskUI> {
         dbHelper.update(id, 1);
         // this.iconColor = green;
         //TODO: Check for completion and play a sound
+        checkForComplete();
       });
 
       // containerBackgroundColor =

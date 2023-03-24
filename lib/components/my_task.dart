@@ -1,4 +1,3 @@
-
 class MyTask {
   String taskName;
   int isComplete;

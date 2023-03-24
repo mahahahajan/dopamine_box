@@ -1,3 +1,4 @@
+import 'package:dopamine_box/components/alarms_helper.dart';
 import 'package:dopamine_box/components/my_task_ui.dart';
 import 'package:dopamine_box/main.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +24,21 @@ class _TaskListHolderState extends State<TaskListHolder> {
     super.initState();
     areAllTasksDone = false;
     player = AudioPlayer();
+    taskListHolderState = this;
   }
 
   @override
   void dispose() {
     player.dispose();
     super.dispose();
+  }
+
+  void resetTasks() async {
+    convertCurrTasksIntoWidgets();
+  }
+
+  static void rebuild() {
+    resetTasks();
   }
 
   void playFinalMusic() {

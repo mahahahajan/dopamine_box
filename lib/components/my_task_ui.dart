@@ -1,5 +1,3 @@
-import 'package:cron/cron.dart';
-import 'package:dopamine_box/components/task_list_holder.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/main.dart';
 import 'package:fade_out_particle/fade_out_particle.dart';
@@ -34,13 +32,13 @@ class _MyTaskUIState extends State<MyTaskUI> {
   void initState() {
     super.initState();
     initializeData();
-    cron.schedule(Schedule.parse('*/1 * * * *'), () {
-      dbHelper.resetTasks();
-      print("Test  cron");
-      setState(() {
-        resetData();
-      });
-    });
+    // cron.schedule(Schedule.parse('*/1 * * * *'), () {
+    //   dbHelper.resetTasks();
+    //   print("Test  cron");
+    //   setState(() {
+    //     resetData();
+    //   });
+    // });
   }
 
   void initializeData() {

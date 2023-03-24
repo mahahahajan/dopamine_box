@@ -1,7 +1,12 @@
+import 'dart:isolate';
 import 'package:dopamine_box/components/task_list_holder.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import '../main.dart';
+
+final GlobalKey<_DopamineBoxHomeScreenState> taskListKey =
+    GlobalKey<_DopamineBoxHomeScreenState>();
 
 class DopamineBoxHomeScreen extends StatefulWidget {
   const DopamineBoxHomeScreen({Key? key}) : super(key: key);
@@ -11,6 +16,12 @@ class DopamineBoxHomeScreen extends StatefulWidget {
 }
 
 class _DopamineBoxHomeScreenState extends State<DopamineBoxHomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);

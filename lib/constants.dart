@@ -6,7 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> reset = checkForDailyReset();
 
-const Color darkThemeBackgroundColor = Color(0xFF0A0903);
+// const Color darkThemeBackgroundColor = Color(0xFF0A0903);
+// const Color darkThemeTextColor = Color(0xFFE5E5E5);
+// const Color essentialTaskBackgroundColor = Color(0xFF1B1B1A);
+const Color darkThemeBackgroundColor = Color.fromARGB(255, 2, 4, 4);
 const Color darkThemeTextColor = Color(0xFFE5E5E5);
 const Color essentialTaskBackgroundColor = Color(0xFF1B1B1A);
 const Color black = Color(0xFF1B1B1A);
@@ -16,9 +19,16 @@ const Color orange = Color(0xFFD74E09);
 const Color yellow = Color(0xFFFF7F11);
 const Color green = Color(0xFF09814A);
 const Color greenAlternate1 = Color(0xFF06d6a0);
-const Color otherGreen = Color.fromARGB(255, 4, 134, 74);
+// const Color otherGreen = Color.fromARGB(255, 4, 134, 74);
+const Color otherGreen = Color.fromARGB(255, 56, 142, 60);
 const Color blue = Color(0xFF247BA0);
 const Color purple = Color(0xFFBC69AA);
+
+//redesign colors  and UI
+const Color mGreen = Color(0xFF1EAE4D);
+const Color mBlackBG = Color(0xFF17171C);
+const Color mBlackCard = Color(0xFF2A2A35);
+const Color mTaskCompleteScreen = Color(0xFF15B57A);
 
 const String doneSoundPath = 'assets/sounds/done.mp3';
 const String levelComplete = 'assets/sounds/levelComplete.mp3';
@@ -30,6 +40,16 @@ const List<String> placeholderTasks = <String>[
   // "Work on a side project",
   // "Work on a hobby",
   // "Skincare and brush at the end of the night",
+];
+
+const List<String> newTasks = <String>[
+  "Brush, Mouthwash, Vitamins, BW excercise, Creatine",
+  "Excercise for > 30 minutes",
+  "Clean room",
+  "Work on a side project",
+  "Work on a hobby",
+  "3 Bottles of Water ",
+  "Shower, Skincare and brush at the end of the night",
 ];
 
 const List<String> defaultTasks = <String>[

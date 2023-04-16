@@ -9,6 +9,7 @@ class DatabaseHelper {
   static const _databaseVersion = 1;
 
   String taskTable = 'task_table';
+  String streakTable = 'streak_table';
   String colId = 'id';
   String colTaskName = 'taskName';
   String colIsComplete = 'isComplete';
@@ -31,6 +32,11 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute(
         ''' CREATE TABLE $taskTable ( $colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTaskName TEXT, $colIsComplete INTEGER, $colStreakCounter INTEGER )''');
+    await db.execute('''
+      CREATE TABLE $streakTable (
+        $colStreakCounter INTEGER PRIMARY KEY
+      )
+  ''');
     await initDB(db);
   }
 
@@ -38,14 +44,12 @@ class DatabaseHelper {
   //Create default tasks if this is our first time
   Future<void> initDB(Database currDB) async {
     // var currDB = await this._db;
-    for (int i = 0; i < defaultTasks.length; i++) {
+    for (int i = 0; i < newTasks.length; i++) {
       MyTask currTask = MyTask(
-          taskName: defaultTasks[i],
-          isComplete: 0,
-          streakCounter: 0,
-          taskId: i);
+          taskName: newTasks[i], isComplete: 0, streakCounter: 0, taskId: i);
       await currDB.insert(taskTable, currTask.toMap());
     }
+    await currDB.insert(streakTable, {'streakCounter': 0});
   }
 
   // Inserts a row in the database where each key in the Map is a column name
@@ -109,12 +113,42 @@ class DatabaseHelper {
   }
 
   Future<bool> areAllTasksComplete() async {
-    final result = await _db
-        .rawQuery("SELECT COUNT(*) FROM task_table WHERE isComplete = 0");
+    final result = await _db.rawQuery(
+        "SELECT COUNT(*) FROM task_table WHERE isComplete = 0"); //gives the number where isComplete = false
     if (Sqflite.firstIntValue(result) == 0) {
+      //if isComplete = false for 0 tasks
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<int?> getCurrentTotalStreak() async {
+    var query = await _db.query(streakTable);
+    return int.parse(query[0]['streakCounter'].toString());
+  }
+
+  //TODO: Create updateStreaks() -- this method will update the streaks when the reset alarm is hit
+  Future<void> updateStreaks() async {
+    //TODO: Update each task colStreak individually as well
+
+    // Get the current value of colStreakCounter from the streakTable
+    final List<Map<String, dynamic>> result = await _db.query(streakTable);
+    int currentStreakCounter =
+        result.isNotEmpty ? result[0]['colStreakCounter'] : 0;
+
+    // Check if all tasks are complete
+    final List<Map<String, dynamic>> tasks =
+        await _db.query(taskTable, where: '$colIsComplete = 1');
+    if (tasks.length == 0) {
+      // If all tasks are complete, increment the streak counter
+      currentStreakCounter++;
+      await _db.insert(streakTable, {'colStreakCounter': currentStreakCounter},
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } else {
+      // Otherwise, reset the streak counter
+      currentStreakCounter = 0;
+      await _db.delete(streakTable);
     }
   }
 

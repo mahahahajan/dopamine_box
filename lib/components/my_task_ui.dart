@@ -1,16 +1,15 @@
+import 'package:dopamine_box/components/task_list_state.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/main.dart';
 import 'package:fade_out_particle/fade_out_particle.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
 
 import 'my_task.dart';
 
 class MyTaskUI extends StatefulWidget {
   final MyTask task;
-  final AudioPlayer player;
-  const MyTaskUI({Key? key, required this.task, required this.player})
-      : super(key: key);
+  const MyTaskUI({Key? key, required this.task}) : super(key: key);
 
   @override
   State<MyTaskUI> createState() => _MyTaskUIState();
@@ -18,13 +17,12 @@ class MyTaskUI extends StatefulWidget {
 
 class _MyTaskUIState extends State<MyTaskUI> {
   late String taskTitle;
-  late AudioPlayer player;
   late bool checked;
   late int taskId;
 
   late IconData checkboxIcon;
-  Color iconColor = white;
-  Color containerBackgroundColor = essentialTaskBackgroundColor;
+  late Color iconColor;
+  Color containerBackgroundColor = Color.fromARGB(0, 0, 0, 0);
   double? checkBoxSize = 18;
   late bool taskWasCompleteAlready;
 
@@ -32,76 +30,41 @@ class _MyTaskUIState extends State<MyTaskUI> {
   void initState() {
     super.initState();
     initializeData();
-    // cron.schedule(Schedule.parse('*/1 * * * *'), () {
-    //   dbHelper.resetTasks();
-    //   print("Test  cron");
-    //   setState(() {
-    //     resetData();
-    //   });
-    // });
   }
 
   void initializeData() {
     taskTitle = widget.task.taskName;
-    player = widget.player;
     checked = widget.task.isComplete == 0 ? false : true;
     taskId = widget.task.taskId;
     taskWasCompleteAlready = checked ? true : false;
-    checkboxIcon = checked ? Icons.done : Icons.circle_outlined;
-  }
-
-  void resetData() {
-    taskTitle = widget.task.taskName;
-    player = widget.player;
-    checked = false;
-    taskId = widget.task.taskId;
-    dbHelper.update(taskId, 0);
-    taskWasCompleteAlready = false;
-    checkboxIcon = Icons.circle_outlined;
-    containerBackgroundColor = essentialTaskBackgroundColor;
-  }
-
-  void checkForComplete() async {
-    bool allTasksComplete = await dbHelper.areAllTasksComplete();
-    if (allTasksComplete) {
-      print("Check for this");
-      playSound(levelComplete);
-    }
-  }
-
-  void playSound(String sound) async {
-    try {
-      await player.setAsset(sound);
-    } on Exception catch (_, e) {
-      print(e);
-      return;
-    }
-    player.play();
+    checkboxIcon = checked ? Icons.check_circle : Icons.circle_outlined;
+    iconColor = checked ? mGreen : white;
   }
 
   void toggleEssentialTask(int id) {
     if (!checked) {
       setState(() {
-        checked = true;
-        checkboxIcon = Icons.done;
-        containerBackgroundColor = otherGreen;
-        checkBoxSize = 34;
-        playSound(doneSoundPath);
         dbHelper.update(id, 1);
-        // this.iconColor = green;
-        //TODO: Check for completion and play a sound
-        checkForComplete();
+        checked = true;
+        checkboxIcon = Icons.check_circle;
+        // containerBackgroundColor = mGreen;
+        this.iconColor = mGreen;
+        checkBoxSize = 30;
+        Provider.of<AppStateManager>(context, listen: false)
+            .playSound(doneSoundPath);
+        Provider.of<AppStateManager>(context, listen: false)
+            .checkForAllTasksComplete();
       });
-
       // containerBackgroundColor =
     } else {
       setState(() {
+        dbHelper.update(id, 0);
         checked = false;
         checkboxIcon = Icons.circle_outlined;
-        containerBackgroundColor = essentialTaskBackgroundColor;
+        containerBackgroundColor = Color.fromARGB(0, 0, 0, 0);
         checkBoxSize = 18;
-        dbHelper.update(id, 0);
-        // this.iconColor = white;
+
+        this.iconColor = white;
       });
     }
   }
@@ -113,13 +76,14 @@ class _MyTaskUIState extends State<MyTaskUI> {
         toggleEssentialTask(taskId);
       },
       child: Container(
-        margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+        margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
         padding: const EdgeInsets.fromLTRB(15, 0, 1, 0),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(15),
+            Radius.circular(8),
           ),
-          color: checked ? otherGreen : containerBackgroundColor,
+          // color: checked ? mGreen : containerBackgroundColor,
+          color: containerBackgroundColor,
         ),
         // color: Colors.black,
         child: Row(
@@ -139,7 +103,7 @@ class _MyTaskUIState extends State<MyTaskUI> {
             // ),
             Icon(
               checkboxIcon,
-              size: 35,
+              size: 30,
               color: iconColor,
             ),
             const SizedBox(
@@ -149,7 +113,19 @@ class _MyTaskUIState extends State<MyTaskUI> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 25.0),
                 child: (taskWasCompleteAlready & checked)
-                    ? const Text("")
+                    ? Text(
+                        taskTitle,
+                        style: const TextStyle(
+                          color: darkThemeBackgroundColor,
+                          fontSize: 18,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w100,
+                          decoration: TextDecoration.lineThrough,
+                          decorationStyle: TextDecorationStyle.solid,
+                          decorationThickness: 3.8,
+                          decorationColor: mGreen,
+                        ),
+                      )
                     : FadeOutParticle(
                         key: UniqueKey(),
                         disappear: checked,
@@ -160,6 +136,8 @@ class _MyTaskUIState extends State<MyTaskUI> {
                           style: const TextStyle(
                             color: white,
                             fontSize: 18,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),

@@ -1,12 +1,7 @@
-import 'dart:isolate';
 import 'package:dopamine_box/components/task_list_holder.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
-
-final GlobalKey<_DopamineBoxHomeScreenState> taskListKey =
-    GlobalKey<_DopamineBoxHomeScreenState>();
 
 class DopamineBoxHomeScreen extends StatefulWidget {
   const DopamineBoxHomeScreen({Key? key}) : super(key: key);
@@ -18,7 +13,6 @@ class DopamineBoxHomeScreen extends StatefulWidget {
 class _DopamineBoxHomeScreenState extends State<DopamineBoxHomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -45,15 +39,14 @@ class _DopamineBoxHomeScreenState extends State<DopamineBoxHomeScreen> {
             ),
           ],
         ),
-        //TODO: Fix this navigation bar -- just make a custom one
         // bottomNavigationBar: bottomBarWidget(),
       ),
     );
   }
 }
 
-class bottomBarWidget extends StatelessWidget {
-  const bottomBarWidget({
+class BottomBarWidvet extends StatelessWidget {
+  const BottomBarWidvet({
     Key? key,
   }) : super(key: key);
 
@@ -61,9 +54,7 @@ class bottomBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DotNavigationBar(
       currentIndex: 0,
-      onTap: (index) {
-        print("Tapped");
-      },
+      onTap: (index) {},
       // margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       // dotIndicatorColor: Colors.black,
       marginR: const EdgeInsets.fromLTRB(2, 5, 2, 5),

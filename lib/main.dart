@@ -1,9 +1,11 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dopamine_box/components/alarms_helper.dart';
+import 'package:dopamine_box/components/task_list_state.dart';
 import 'package:dopamine_box/constants.dart';
 import 'package:dopamine_box/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'components/database_helper.dart';
+import 'package:provider/provider.dart';
 
 //Set up DatabaseHelper
 final dbHelper = DatabaseHelper();
@@ -12,10 +14,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dbHelper.init();
   await AndroidAlarmManager.initialize();
-  runApp(const DopamineBoxApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => AppStateManager(),
+    child: const DopamineBoxApp(),
+  ));
   setupMorningAlarm();
   //If debugging
-  setupDebugAlarms();
+  // setupDebugAlarms();
 }
 
 class DopamineBoxApp extends StatelessWidget {
@@ -28,7 +33,7 @@ class DopamineBoxApp extends StatelessWidget {
       title: 'Dopamine Box',
       theme: ThemeData.dark().copyWith(
         useMaterial3: true,
-        scaffoldBackgroundColor: darkThemeBackgroundColor,
+        scaffoldBackgroundColor: mBlackCard,
         applyElevationOverlayColor: false,
       ),
       home: const DopamineBoxHomeScreen(),

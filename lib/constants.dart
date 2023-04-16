@@ -43,12 +43,12 @@ const List<String> placeholderTasks = <String>[
 ];
 
 const List<String> newTasks = <String>[
-  "Brush, Mouthwash, Vitamins, BW excercise, Creatine",
-  "Excercise for > 30 minutes",
-  "Clean room",
-  "Work on a side project",
-  "Work on a hobby",
+  "Morning Routine: Brush, Mouthwash, Vitamins, BW excercise, Creatine",
+  "Make your bed / clean room",
   "3 Bottles of Water ",
+  "Excercise for > 30 minutes",
+  "Work on a side project / hobby",
+  "Read",
   "Shower, Skincare and brush at the end of the night",
 ];
 

@@ -30,8 +30,7 @@ class _AllTasksCompleteScreen extends State<AllTasksCompleteScreen> {
     currentStreak = getCurrentStreak() as int;
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 1));
-    Provider.of<AppStateManager>(context, listen: false)
-        .playSound(levelComplete);
+    Provider.of<AppStateManager>(context, listen: false).completeTaskSound();
   }
 
   int getCurrentStreak() {

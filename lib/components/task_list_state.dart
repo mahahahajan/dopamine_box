@@ -21,6 +21,19 @@ class AppStateManager extends ChangeNotifier {
     }
   }
 
+  void completeTaskSound() async {
+    final AudioPlayer levelCompletePlayer = AudioPlayer();
+    try {
+      await levelCompletePlayer.setAsset(levelComplete);
+      await levelCompletePlayer.play();
+    } on Exception catch (_, e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return;
+    }
+  }
+
   void updateHomeScreen() {
     completedAllTasks = false;
     notifyListeners();
